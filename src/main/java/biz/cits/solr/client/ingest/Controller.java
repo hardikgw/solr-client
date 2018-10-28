@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @RestController
@@ -22,7 +23,6 @@ public class Controller {
 
     @Autowired
     HttpSolrClient client;
-
 
     @RequestMapping(value = "/create",
             method = RequestMethod.POST,
@@ -36,21 +36,24 @@ public class Controller {
     private void indexDocument(String data) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode json = mapper.readValue(data, JsonNode.class);
-
-        SolrInputDocument doc = new SolrInputDocument();
-        String id = UUID.randomUUID().toString();
         json.forEach(x -> {
+            String id = UUID.randomUUID().toString();
+            final SolrInputDocument doc = new SolrInputDocument();
             x.fieldNames().forEachRemaining(y -> {
                         JsonNode yNode = x.get(y);
                         if (yNode.isArray()) {
+                            ArrayList<SolrInputDocument> childDocs = new ArrayList<>();
                             yNode.forEach(yNodeChild -> {
                                 SolrInputDocument childDoc = getSolrDocument(yNodeChild);
-                                childDoc.addField("path", "master/" + y);
-                                doc.addChildDocument(childDoc);
+                                childDoc.addField("doc_type", "child");
+                                childDoc.addField("path", id + "---" + childDoc.getField("id"));
+                                childDocs.add(childDoc);
                             });
+                            doc.addChildDocuments(childDocs);
                         } else if (yNode.isObject()) {
                             SolrInputDocument childDoc = getSolrDocument(yNode);
-                            childDoc.addField("path", "master/" + y);
+                            childDoc.addField("doc_type", "child");
+                            childDoc.addField("path", id + "---" + childDoc.getField("id"));
                             doc.addChildDocument(childDoc);
                         } else {
                             doc.addField(y, yNode.asText());
@@ -58,7 +61,8 @@ public class Controller {
                     }
             );
             doc.addField("id", id);
-            doc.addField("path", "master/" + UUID.randomUUID().toString());
+            doc.addField("doc_type", "master");
+            doc.addField("path", id);
             try {
                 client.add("test", doc);
                 client.commit("test");
@@ -73,7 +77,14 @@ public class Controller {
         SolrInputDocument doc = new SolrInputDocument();
         doc.addField("id", UUID.randomUUID().toString());
         x.fieldNames().forEachRemaining(y -> {
-            doc.addField(y, x.get(y).textValue());
+            JsonNode val = x.get(y);
+            if (y.startsWith("claim_number") || y.indexOf("_id") > 0) {
+                doc.addField(y, val.asText());
+            } else if (val.isNumber()) {
+                doc.addField(y, val.asDouble());
+            } else {
+                doc.addField(y, val.asText());
+            }
         });
         return doc;
     }
