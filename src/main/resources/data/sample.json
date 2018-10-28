@@ -1,0 +1,127 @@
+[
+  {
+    "claim_number": 2017322904,
+    "claim_details": {
+      "CalimantFirstName": "FirstName1",
+      "ClaimantMiddleName": "MiddleName1",
+      "ClaimantLastName": "LastName1",
+      "birth_date": "1952-07-25T00:00:00"
+    },
+    "bill_details": [
+      {
+        "claim_number_bill": "2017322904",
+        "payment_id": 77885332,
+        "billed_amount": 543.3000,
+        "cleared_date": "2017-05-17T00:00:00"
+      },
+      {
+        "claim_number_bill": "2017322904",
+        "payment_id": 77885333,
+        "billed_amount": 500.0000,
+        "cleared_date": "2017-06-17T00:00:00"
+      },
+      {
+        "claim_number_bill": "2017322904",
+        "payment_id": 77885334,
+        "billed_amount": 500.0000,
+        "cleared_date": "2017-06-17T00:00:00"
+      }
+    ],
+    "bill_line_details": [
+      {
+        "claim_number_line": "2017322904",
+        "payment_id_line": 77885332,
+        "payment_detail_id": 24331980,
+        "num_of_service_lines": 2,
+        "line_allowed_amount": 361.0000,
+        "line_charge": 361.0000,
+        "line_number": 1
+      },
+      {
+        "claim_number_line": "2017322904",
+        "payment_id_line": 77885332,
+        "payment_detail_id": 24331981,
+        "num_of_service_lines": 2,
+        "line_allowed_amount": 361.0000,
+        "line_charge": 361.0000,
+        "line_number": 2
+      },
+      {
+        "claim_number_line": "2017322904",
+        "payment_id_line": 77885333,
+        "payment_detail_id": 24331982,
+        "num_of_service_lines": 3,
+        "line_allowed_amount": 361.0000,
+        "line_charge": 361.0000,
+        "line_number": 1
+      }
+    ]
+  },
+  {
+    "claim_number": 2017322905,
+    "claim_details": {
+      "CalimantFirstName": "FirstName2",
+      "ClaimantMiddleName": "MiddleName2",
+      "ClaimantLastName": "LastName2",
+      "birth_date": "1957-12-24T00:00:00"
+    },
+    "bill_details": [
+      {
+        "claim_number_bill": "2017322905",
+        "payment_id": 77885342,
+        "billed_amount": 843.3000,
+        "cleared_date": "2017-09-17T00:00:00"
+      },
+      {
+        "claim_number_bill": "2017322905",
+        "payment_id": 77885343,
+        "billed_amount": 800.0000,
+        "cleared_date": "2017-09-17T00:00:00"
+      },
+      {
+        "claim_number_bill": "2017322905",
+        "payment_id": 77885344,
+        "billed_amount": 800.0000,
+        "cleared_date": "2017-10-17T00:00:00"
+      }
+    ],
+    "bill_line_details": [
+      {
+        "claim_number_line": "2017322905",
+        "payment_id_line": 77885342,
+        "payment_detail_id": 24331990,
+        "num_of_service_lines": 1,
+        "line_allowed_amount": 471.0000,
+        "line_charge": 451.0000,
+        "line_number": 1
+      },
+      {
+        "claim_number_line": "2017322905",
+        "payment_id_line": 77885343,
+        "payment_detail_id": 24331992,
+        "num_of_service_lines": 1,
+        "line_allowed_amount": 471.0000,
+        "line_charge": 451.0000,
+        "line_number": 1
+      },
+      {
+        "claim_number_line": "2017322905",
+        "payment_id_line": 77885344,
+        "payment_detail_id": 24331993,
+        "num_of_service_lines": 2,
+        "line_allowed_amount": 481.0000,
+        "line_charge": 461.0000,
+        "line_number": 1
+      },
+      {
+        "claim_number_line": "2017322905",
+        "payment_id_line": 77885344,
+        "payment_detail_id": 24331993,
+        "num_of_service_lines": 2,
+        "line_allowed_amount": 481.0000,
+        "line_charge": 461.0000,
+        "line_number": 2
+      }
+    ]
+  }
+]
