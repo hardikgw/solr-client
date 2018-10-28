@@ -73,6 +73,28 @@ public class Controller {
 
     }
 
+    private SolrInputDocument getNestedSolrDoc(JsonNode x, SolrInputDocument doc) {
+        SolrInputDocument outDoc = new SolrInputDocument();
+        outDoc.putAll(doc);
+        x.fieldNames().forEachRemaining(y -> {
+            JsonNode yNode = x.get(y);
+            if (yNode.isArray()) {
+                ArrayList<SolrInputDocument> childDocs = new ArrayList<>();
+                yNode.forEach(yNodeChild -> {
+                    SolrInputDocument childDoc = getNestedSolrDoc(yNodeChild, outDoc);
+                    childDocs.add(childDoc);
+                });
+                outDoc.addChildDocuments(childDocs);
+            } else if (yNode.isObject()) {
+                SolrInputDocument childDoc = getNestedSolrDoc(yNode, outDoc);
+                outDoc.addChildDocument(childDoc);
+            } else {
+                outDoc.addField(y, yNode.asText());
+            }
+        });
+        return outDoc;
+    }
+
     private SolrInputDocument getSolrDocument(JsonNode x) {
         SolrInputDocument doc = new SolrInputDocument();
         doc.addField("id", UUID.randomUUID().toString());
@@ -86,6 +108,7 @@ public class Controller {
                 doc.addField(y, val.asText());
             }
         });
+
         return doc;
     }
 
