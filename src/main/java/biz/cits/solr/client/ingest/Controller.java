@@ -38,25 +38,27 @@ public class Controller {
         JsonNode json = mapper.readValue(data, JsonNode.class);
 
         SolrInputDocument doc = new SolrInputDocument();
+        String id = UUID.randomUUID().toString();
         json.forEach(x -> {
             x.fieldNames().forEachRemaining(y -> {
                         JsonNode yNode = x.get(y);
                         if (yNode.isArray()) {
                             yNode.forEach(yNodeChild -> {
-                                doc.addChildDocument(getSolrDocument(yNodeChild));
+                                SolrInputDocument childDoc = getSolrDocument(yNodeChild);
+                                childDoc.addField("path", "master/" + y);
+                                doc.addChildDocument(childDoc);
                             });
                         } else if (yNode.isObject()) {
-                            doc.addChildDocument(getSolrDocument(yNode));
+                            SolrInputDocument childDoc = getSolrDocument(yNode);
+                            childDoc.addField("path", "master/" + y);
+                            doc.addChildDocument(childDoc);
                         } else {
-                            if (yNode.toString().toLowerCase().indexOf("date") > 0) {
-
-                            } else {
-                                doc.addField(y, yNode.asText());
-                            }
+                            doc.addField(y, yNode.asText());
                         }
                     }
             );
-            doc.addField("id", UUID.randomUUID().toString());
+            doc.addField("id", id);
+            doc.addField("path", "master/" + UUID.randomUUID().toString());
             try {
                 client.add("test", doc);
                 client.commit("test");
