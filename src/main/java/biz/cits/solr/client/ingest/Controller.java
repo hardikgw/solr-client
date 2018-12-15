@@ -73,7 +73,8 @@ public class Controller {
 
     }
 
-    private SolrInputDocument getNestedSolrDoc(JsonNode x, SolrInputDocument doc) {
+    private SolrInputDocument getNestedSolrDoc(JsonNode x, SolrInputDocument doc, int levelCtr) {
+        int thisLevelCtr = levelCtr + 1;
         SolrInputDocument outDoc = new SolrInputDocument();
         outDoc.putAll(doc);
         x.fieldNames().forEachRemaining(y -> {
@@ -81,12 +82,15 @@ public class Controller {
             if (yNode.isArray()) {
                 ArrayList<SolrInputDocument> childDocs = new ArrayList<>();
                 yNode.forEach(yNodeChild -> {
-                    SolrInputDocument childDoc = getNestedSolrDoc(yNodeChild, outDoc);
+                    SolrInputDocument childDoc = getNestedSolrDoc(yNodeChild, outDoc, thisLevelCtr);
+                    childDoc.addField("id", UUID.randomUUID());
+                    childDoc.addField("level", thisLevelCtr);
                     childDocs.add(childDoc);
                 });
                 outDoc.addChildDocuments(childDocs);
             } else if (yNode.isObject()) {
-                SolrInputDocument childDoc = getNestedSolrDoc(yNode, outDoc);
+                SolrInputDocument childDoc = getNestedSolrDoc(yNode, outDoc, thisLevelCtr);
+                childDoc.addField("level", thisLevelCtr);
                 outDoc.addChildDocument(childDoc);
             } else {
                 outDoc.addField(y, yNode.asText());

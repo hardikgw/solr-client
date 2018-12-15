@@ -17,8 +17,13 @@ import java.util.Collections;
 public class App {
 
     @Value("${solr.host.url}")
-    String solrUrl;
+    String solrHostUrl;
 
+    @Value("${solr.cloud.solrUrls}")
+    String solrCloudSolrUrls;
+
+    @Value("${solr.cloud.zkHosts}")
+    String solrCloudZkHosts;
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
@@ -37,8 +42,17 @@ public class App {
     }
 
     @Bean
-    public HttpSolrClient solrClient() {
-        HttpSolrClient client = new HttpSolrClient.Builder(solrUrl)
+    public HttpSolrClient httpSolrClient() {
+        HttpSolrClient client = new HttpSolrClient.Builder(solrHostUrl)
+                .withConnectionTimeout(10000)
+                .withSocketTimeout(60000)
+                .build();
+        return client;
+    }
+
+    @Bean
+    public CloudSolrClient cloudSolrClient() {
+        CloudSolrClient client = new CloudSolrClient.Builder(Collections.singletonList(solrCloudSolrUrls))
                 .withConnectionTimeout(10000)
                 .withSocketTimeout(60000)
                 .build();
