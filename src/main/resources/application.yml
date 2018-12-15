@@ -4,3 +4,8 @@ solr:
   cloud:
     solrUrls: http://localhost:8983/solr
     zkHosts: localhost:2181
+
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/cs
