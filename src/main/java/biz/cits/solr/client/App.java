@@ -22,7 +22,7 @@ public class App {
     String solrHostUrl;
 
     @Value("${solr.cloud.solrUrls}")
-    String solrCloudSolrUrls;
+    List<String> solrCloudSolrUrls;
 
     @Value("${solr.cloud.zkHosts}")
     List<String> solrCloudZkHosts;
