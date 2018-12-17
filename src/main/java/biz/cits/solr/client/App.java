@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication(exclude = SolrAutoConfiguration.class)
 public class App {
@@ -23,7 +25,7 @@ public class App {
     String solrCloudSolrUrls;
 
     @Value("${solr.cloud.zkHosts}")
-    String solrCloudZkHosts;
+    List<String> solrCloudZkHosts;
 
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
@@ -52,7 +54,7 @@ public class App {
 
     @Bean
     public CloudSolrClient cloudSolrClient() {
-        CloudSolrClient client = new CloudSolrClient.Builder(Collections.singletonList(solrCloudSolrUrls))
+        CloudSolrClient client = new CloudSolrClient.Builder(solrCloudZkHosts, Optional.empty())
                 .withConnectionTimeout(10000)
                 .withSocketTimeout(60000)
                 .build();
