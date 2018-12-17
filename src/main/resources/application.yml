@@ -1,6 +1,6 @@
 solr:
   host:
-    url: http://54.191.174.164:8983/solr
+    url: http:/localhost:8983/solr
   cloud:
     solrUrls: http://localhost:8983/solr
     zkHosts: localhost:2181
