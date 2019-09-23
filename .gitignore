@@ -1,4 +1,6 @@
 docker
+.idea
+.DS_Store
 *.iml
 idea
 target
