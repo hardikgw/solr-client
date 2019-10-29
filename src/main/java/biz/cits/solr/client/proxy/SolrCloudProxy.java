@@ -25,18 +25,27 @@ public class SolrCloudProxy {
     @RequestMapping(value = "/query",
             method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")
-    public String query(@RequestBody String data) throws IOException, SolrServerException {
+    public String query(@RequestParam String collection, @RequestBody Optional<String> jsonQueryBody, @RequestParam Optional<String> jsonQueryParam) throws IOException, SolrServerException {
+        String jsonQuery = "No Query Found";
+        if (jsonQueryBody != null) {
+            jsonQuery = jsonQueryBody;
+        } else if (jsonQueryParam != null) {
+            jsonQuery = jsonQueryParam
+        } else {
+            return jsonQuery;
+        }
+
         NoOpResponseParser responseParser = new NoOpResponseParser();
 
         responseParser.setWriterType("json");
         cloudSolrClient.setParser(responseParser);
 
-        GenericSolrRequest solrRequest = new GenericSolrRequest(SolrRequest.METHOD.POST, "/select", null);
+        GenericSolrRequest solrRequest = new GenericSolrRequest(SolrRequest.METHOD.POST, "/select", collection);
 //        solrRequest.setBasicAuthCredentials("solr", "SolrRocks");
         solrRequest.setUseV2(true);
-        RequestWriter.StringPayloadContentWriter contentWriter = new RequestWriter.StringPayloadContentWriter(data, CommonParams.JSON_MIME);
+        RequestWriter.StringPayloadContentWriter contentWriter = new RequestWriter.StringPayloadContentWriter(jsonQuery, CommonParams.JSON_MIME);
         solrRequest.setContentWriter(contentWriter);
-        SimpleSolrResponse response = solrRequest.process(cloudSolrClient, "cit_col");
+        SimpleSolrResponse response = solrRequest.process(cloudSolrClient, collection);
         String out = response.getResponse().toString();
         System.out.println(out);
         return out;

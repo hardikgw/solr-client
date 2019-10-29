@@ -3,7 +3,7 @@ solr:
     url: http:/localhost:8983/solr
   cloud:
     solrUrls: http://localhost:8983/solr
-    zkHosts: localhost:9983
+    zkHosts: localhost:2181
 
 server:
   compression:
