@@ -9,12 +9,10 @@ import org.apache.solr.client.solrj.request.RequestWriter;
 import org.apache.solr.client.solrj.response.SimpleSolrResponse;
 import org.apache.solr.common.params.CommonParams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 public class SolrCloudProxy {
@@ -27,10 +25,10 @@ public class SolrCloudProxy {
             consumes = "application/json", produces = "application/json")
     public String query(@RequestParam String collection, @RequestBody Optional<String> jsonQueryBody, @RequestParam Optional<String> jsonQueryParam) throws IOException, SolrServerException {
         String jsonQuery = "No Query Found";
-        if (jsonQueryBody != null) {
-            jsonQuery = jsonQueryBody;
-        } else if (jsonQueryParam != null) {
-            jsonQuery = jsonQueryParam
+        if (jsonQueryParam.isPresent()) {
+            jsonQuery = jsonQueryParam.get();
+        } else if (jsonQueryBody.isPresent()) {
+            jsonQuery = jsonQueryBody.get();
         } else {
             return jsonQuery;
         }
@@ -40,7 +38,7 @@ public class SolrCloudProxy {
         responseParser.setWriterType("json");
         cloudSolrClient.setParser(responseParser);
 
-        GenericSolrRequest solrRequest = new GenericSolrRequest(SolrRequest.METHOD.POST, "/select", collection);
+        GenericSolrRequest solrRequest = new GenericSolrRequest(SolrRequest.METHOD.POST, "/select",null);
 //        solrRequest.setBasicAuthCredentials("solr", "SolrRocks");
         solrRequest.setUseV2(true);
         RequestWriter.StringPayloadContentWriter contentWriter = new RequestWriter.StringPayloadContentWriter(jsonQuery, CommonParams.JSON_MIME);
