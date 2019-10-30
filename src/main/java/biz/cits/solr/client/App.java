@@ -27,6 +27,9 @@ public class App {
     @Value("${solr.cloud.zkHosts}")
     List<String> solrCloudZkHosts;
 
+    @Value("${solr.cloud.zkFolder}")
+    Optional<String> solrCloudZkFolder;
+
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
     }
@@ -54,13 +57,12 @@ public class App {
 
     @Bean
     public CloudSolrClient cloudSolrClient() {
-        CloudSolrClient client = new CloudSolrClient.Builder(solrCloudZkHosts, Optional.empty())
+        CloudSolrClient client = new CloudSolrClient.Builder(solrCloudZkHosts, solrCloudZkFolder)
                 .withConnectionTimeout(10000)
                 .withSocketTimeout(60000)
                 .build();
         return client;
     }
-
 
 
 }

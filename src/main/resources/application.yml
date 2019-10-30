@@ -1,13 +1,14 @@
 solr:
   host:
-    url: http:/localhost:8983/solr
+    url: ${SOLR_URL:http:/localhost:8983/solr}
   cloud:
-    solrUrls: http://localhost:8983/solr
-    zkHosts: localhost:2181
+    solrUrls: ${SOLR_URLS:http://localhost:8983/solr}
+    zkHosts: ${ZK_HOSTS:localhost:2181}
+    zkFolder: ${ZK_FOLDER:}
 
 server:
-  port: 8081
+  port: ${SERVER_PORT:8081}
   compression:
-    enabled: true
+    enabled: ${COMPRESSION_ENABLED:true}
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/cs
     min-response-size: 100
